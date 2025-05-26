@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  role      String   @default("user")
+  saldo     Int      @default(0)
+  referral  String?
+  referredBy String?
+  createdAt DateTime @default(now())
+  transaksi Transaksi[]
+}
+
+model Transaksi {
+  id         String   @id @default(cuid())
+  userId     String
+  produk     String
+  nominal    Int
+  status     String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
